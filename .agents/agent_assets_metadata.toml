@@ -1,0 +1,20 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "qYxurf0CgKDP-XdpuWz1z"
+uri = "file://artifacts/vydrive/public/images/hero.png"
+type = "image"
+title = "Futuristic cab at dusk"
+
+[[generated]]
+id = "9zQS4QOznUb6qZ28sSfEn"
+uri = "file://artifacts/vydrive/public/images/riders.png"
+type = "image"
+title = "Diverse riders near cab"
+
+[[generated]]
+id = "OKX2JDi71xEWihcaJdk_V"
+uri = "file://artifacts/vydrive/public/images/app-mockup.png"
+type = "image"
+title = "App mockup on phone"
