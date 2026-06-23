@@ -18,3 +18,9 @@ id = "OKX2JDi71xEWihcaJdk_V"
 uri = "file://artifacts/vydrive/public/images/app-mockup.png"
 type = "image"
 title = "App mockup on phone"
+
+[[generated]]
+id = "2AZU3c5-xB3Hp1j6HK777"
+uri = "file://attached_assets/generated_images/clarksville_tennessee_city_skyline_ef5a.png"
+type = "image"
+title = "generated_image"
