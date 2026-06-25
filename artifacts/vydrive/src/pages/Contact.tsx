@@ -15,8 +15,8 @@ import { useState, useEffect } from "react";
 
 // Replace these with your Formspree form IDs from https://formspree.io
 // Create a free account, add two forms, and paste each form's ID below.
-const CONTACT_FORM_ID = "YOUR_CONTACT_FORM_ID";
-const PARTNER_FORM_ID = "YOUR_PARTNER_FORM_ID";
+const CONTACT_FORM_ID = "mpqgppea";
+const PARTNER_FORM_ID = "mwvdlljv";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name is required"),
