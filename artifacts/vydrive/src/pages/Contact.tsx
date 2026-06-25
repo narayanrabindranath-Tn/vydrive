@@ -74,7 +74,7 @@ function ContactForm() {
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-contact-name" placeholder="Jane Smith" className="bg-background" {...field} />
+                    <Input data-testid="input-contact-name" placeholder="Your full name" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -197,7 +197,7 @@ function PartnerForm() {
                 <FormItem>
                   <FormLabel>Organization Name</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-partner-org" placeholder="Tennova Healthcare" className="bg-background" {...field} />
+                    <Input data-testid="input-partner-org" placeholder="Your organization name" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
