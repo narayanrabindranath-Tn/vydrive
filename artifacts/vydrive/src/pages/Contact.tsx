@@ -10,7 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -20,6 +21,8 @@ const formSchema = z.object({
 });
 
 export default function Contact() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,10 +33,27 @@ export default function Contact() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast.success("Message sent successfully. We will be in touch shortly.");
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? "Something went wrong");
+      }
+
+      toast.success("Message sent! We'll be in touch shortly.");
+      form.reset();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -41,7 +61,7 @@ export default function Contact() {
       <Navbar />
       <main className="flex-grow pt-32 pb-24 bg-background">
         <div className="container mx-auto px-4 md:px-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -68,7 +88,7 @@ export default function Contact() {
                       <p className="text-muted-foreground">Narayan Rabindranath, Founder</p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-4 rounded-full text-primary">
                       <Phone size={24} />
@@ -103,7 +123,7 @@ export default function Contact() {
                         <FormItem>
                           <FormLabel>Full Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="John Doe" className="bg-background" {...field} />
+                            <Input data-testid="input-name" placeholder="John Doe" className="bg-background" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -116,7 +136,7 @@ export default function Contact() {
                         <FormItem>
                           <FormLabel>Email Address</FormLabel>
                           <FormControl>
-                            <Input placeholder="john@example.com" className="bg-background" {...field} />
+                            <Input data-testid="input-email" placeholder="john@example.com" className="bg-background" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -130,7 +150,7 @@ export default function Contact() {
                           <FormLabel>Subject</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger data-testid="select-subject" className="bg-background">
                                 <SelectValue placeholder="Select a subject" />
                               </SelectTrigger>
                             </FormControl>
@@ -152,14 +172,31 @@ export default function Contact() {
                         <FormItem>
                           <FormLabel>Message</FormLabel>
                           <FormControl>
-                            <Textarea placeholder="How can we help?" className="min-h-[150px] bg-background" {...field} />
+                            <Textarea
+                              data-testid="textarea-message"
+                              placeholder="How can we help?"
+                              className="min-h-[150px] bg-background"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" className="w-full rounded-full py-6 text-lg bg-primary hover:bg-primary/90 text-white">
-                      Send Message
+                    <Button
+                      data-testid="button-submit"
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full rounded-full py-6 text-lg bg-primary hover:bg-primary/90 text-white"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        "Send Message"
+                      )}
                     </Button>
                   </form>
                 </Form>
