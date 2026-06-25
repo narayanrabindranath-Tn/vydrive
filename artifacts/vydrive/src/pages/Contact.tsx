@@ -13,6 +13,11 @@ import { motion } from "framer-motion";
 import { Loader2, Handshake, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 
+// Replace these with your Formspree form IDs from https://formspree.io
+// Create a free account, add two forms, and paste each form's ID below.
+const CONTACT_FORM_ID = "YOUR_CONTACT_FORM_ID";
+const PARTNER_FORM_ID = "YOUR_PARTNER_FORM_ID";
+
 const contactSchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email address"),
@@ -38,14 +43,13 @@ function ContactForm() {
   async function onSubmit(values: z.infer<typeof contactSchema>) {
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(`https://formspree.io/f/${CONTACT_FORM_ID}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify(values),
       });
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? "Something went wrong");
+        throw new Error("Something went wrong. Please try again.");
       }
       toast.success("Message sent! We'll be in touch shortly.");
       form.reset();
@@ -74,7 +78,7 @@ function ContactForm() {
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-contact-name" placeholder="Your full name" className="bg-background" {...field} />
+                    <Input placeholder="Your full name" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,7 +91,7 @@ function ContactForm() {
                 <FormItem>
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-contact-email" placeholder="jane@example.com" className="bg-background" {...field} />
+                    <Input placeholder="jane@example.com" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -102,7 +106,7 @@ function ContactForm() {
                 <FormLabel>Subject</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger data-testid="select-contact-subject" className="bg-background">
+                    <SelectTrigger className="bg-background">
                       <SelectValue placeholder="Select a subject" />
                     </SelectTrigger>
                   </FormControl>
@@ -124,7 +128,6 @@ function ContactForm() {
                 <FormLabel>Message</FormLabel>
                 <FormControl>
                   <Textarea
-                    data-testid="textarea-contact-message"
                     placeholder="How can we help?"
                     className="min-h-[130px] bg-background"
                     {...field}
@@ -135,7 +138,6 @@ function ContactForm() {
             )}
           />
           <Button
-            data-testid="button-contact-submit"
             type="submit"
             disabled={isSubmitting}
             className="w-full rounded-full py-6 text-lg bg-primary hover:bg-primary/90 text-white"
@@ -158,14 +160,13 @@ function PartnerForm() {
   async function onSubmit(values: z.infer<typeof partnerSchema>) {
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/partner", {
+      const res = await fetch(`https://formspree.io/f/${PARTNER_FORM_ID}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify(values),
       });
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? "Something went wrong");
+        throw new Error("Something went wrong. Please try again.");
       }
       toast.success("Partnership inquiry sent! We'll follow up within 48 hours.");
       form.reset();
@@ -197,7 +198,7 @@ function PartnerForm() {
                 <FormItem>
                   <FormLabel>Organization Name</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-partner-org" placeholder="Your organization name" className="bg-background" {...field} />
+                    <Input placeholder="Your organization name" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -210,7 +211,7 @@ function PartnerForm() {
                 <FormItem>
                   <FormLabel>Your Name</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-partner-name" placeholder="Your full name" className="bg-background" {...field} />
+                    <Input placeholder="Your full name" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -225,7 +226,7 @@ function PartnerForm() {
                 <FormItem>
                   <FormLabel>Work Email</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-partner-email" placeholder="you@organization.com" className="bg-background" {...field} />
+                    <Input placeholder="you@organization.com" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -239,7 +240,7 @@ function PartnerForm() {
                   <FormLabel>Partnership Type</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger data-testid="select-partner-type" className="bg-background">
+                      <SelectTrigger className="bg-background">
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
                     </FormControl>
@@ -266,7 +267,6 @@ function PartnerForm() {
                 <FormLabel>Tell us about the opportunity</FormLabel>
                 <FormControl>
                   <Textarea
-                    data-testid="textarea-partner-message"
                     placeholder="Describe your transportation needs, volume, and any existing programs..."
                     className="min-h-[130px] bg-background"
                     {...field}
@@ -277,7 +277,6 @@ function PartnerForm() {
             )}
           />
           <Button
-            data-testid="button-partner-submit"
             type="submit"
             disabled={isSubmitting}
             className="w-full rounded-full py-6 text-lg bg-primary hover:bg-primary/90 text-white"
@@ -292,7 +291,7 @@ function PartnerForm() {
 
 export default function Contact() {
   useEffect(() => {
-    if (window.location.hash === "#partner") {
+    if (window.location.hash.includes("#partner") || window.location.search.includes("partner")) {
       setTimeout(() => {
         document.getElementById("partner")?.scrollIntoView({ behavior: "smooth" });
       }, 100);
