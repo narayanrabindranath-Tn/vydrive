@@ -17,12 +17,7 @@ export function HowWeMove() {
       icon: HeartHandshake,
       title: "Senior & Accessible",
       description: "Serving eligible seniors and riders with disabilities through screened referrals from local agencies."
-    },
-    {
-      icon: Briefcase,
-      title: "City & Workforce",
-      description: "Contracts serving the City of Clarksville, Montgomery County, LG Electronics, Hankook Tire, and APSU students."
-    },
+    },   
     {
       icon: Car,
       title: "Community Rideshare",
